@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grades - CS 249</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2e3f52;
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #2e3f52;
+    }
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .grade-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+    .grade-table th, .grade-table td {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    .grade-table th {
+      background-color: #f5f5f5;
+      color: #2e3f52;
+    }
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #2e3f52;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #43576b;
+    }
+    .back-button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #f3f3f3;
+      color: #2e3f52;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-right: 1rem;
+    }
+    .back-button:hover {
+      background-color: #e0e0e0;
+    }
+    .confirmation {
+      display: none;
+      padding: 1rem;
+      background-color: #d4edda;
+      color: #155724;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Grades</h1>
+    
+    <div class="form-group">
+      <label for="grade-type">Grade Type</label>
+      <select id="grade-type" onchange="toggleGradeInput()">
+        <option value="">Select Grade Type</option>
+        <option value="quiz">Quiz</option>
+        <option value="test">Test</option>
+      </select>
+    </div>
+
+    <div id="grade-form" style="display: none;">
+      <table class="grade-table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>John Doe</td>
+            <td><input type="number" min="0" max="100" placeholder="Enter grade"></td>
+          </tr>
+          <tr>
+            <td>Jane Smith</td>
+            <td><input type="number" min="0" max="100" placeholder="Enter grade"></td>
+          </tr>
+          <tr>
+            <td>Alex Johnson</td>
+            <td><input type="number" min="0" max="100" placeholder="Enter grade"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button class="button" onclick="saveGrades()">Save Grades</button>
+    </div>
+
+    <div id="confirmation" class="confirmation">
+      Grades have been saved successfully!
+    </div>
+
+    <a href="cs249.html" class="back-button">← Back to Course</a>
+  </div>
+
+  <script>
+    function toggleGradeInput() {
+      const gradeType = document.getElementById('grade-type').value;
+      const gradeForm = document.getElementById('grade-form');
+      gradeForm.style.display = gradeType ? 'block' : 'none';
+    }
+
+    function saveGrades() {
+      const confirmation = document.getElementById('confirmation');
+      confirmation.style.display = 'block';
+      setTimeout(() => {
+        window.location.href = 'cs249.html';
+      }, 2000);
+    }
+  </script>
+</body>
+</html> 

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Canvas Dashboard Example with AI Chat</title>
+  <style>
+    /* --------------------------
+       GLOBAL STYLING
+    --------------------------- */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+    }
+    h1, h2, h3, h4 {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --------------------------
+       LAYOUT CONTAINERS
+    --------------------------- */
+    .container {
+      display: grid;
+      grid-template-columns: 240px 1fr 280px; /* left sidebar, main, right sidebar */
+      grid-gap: 1rem;
+      min-height: 100vh;
+    }
+
+    /* --------------------------
+       LEFT SIDEBAR
+    --------------------------- */
+    .sidebar {
+      background-color: #2e3f52;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0.5rem 0;
+      display: block;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+    }
+    .sidebar a:hover {
+      background-color: #43576b;
+    }
+
+    /* --------------------------
+       MAIN CONTENT AREA
+    --------------------------- */
+    .main-content {
+      padding: 1rem;
+    }
+    .main-content h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-gap: 1rem;
+    }
+    .course-card {
+      background-color: #fff;
+      border-radius: 6px;
+      padding: 1rem;
+      color: #333;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .course-card a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+    .course-card a:hover {
+      text-decoration: underline;
+    }
+    .course-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .course-card .course-term {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    /* --------------------------
+       RIGHT SIDEBAR
+    --------------------------- */
+    .right-sidebar {
+      background-color: #fff;
+      padding: 1rem;
+      border-left: 1px solid #ddd;
+    }
+    .todo-section h2, .external-tools-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .todo-item {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    .todo-item:hover {
+      background-color: #efefef;
+    }
+    .todo-item h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+    .todo-item span {
+      display: block;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .external-tool-item {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 4px;
+      background-color: #f2fff2;
+    }
+    .external-tool-item:hover {
+      background-color: #e5ffe5;
+    }
+    .external-tool-item h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+    .external-tool-item span {
+      display: block;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .external-tool-item a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    .external-tool-item a:hover {
+      text-decoration: underline;
+    }
+
+    /* --------------------------
+       AI CHAT BUTTON & WINDOW
+    --------------------------- */
+    .ai-chat-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      width: 50px;
+      height: 50px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ai-chat-button:hover {
+      background-color: #555;
+    }
+    .ai-chat-container {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      width: 320px;
+      max-height: 60vh;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .ai-chat-container.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .ai-chat-header {
+      background-color: #2e3f52;
+      color: #fff;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ai-chat-header h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .ai-chat-header button {
+      background: none;
+      color: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .ai-chat-header button:hover {
+      opacity: 0.8;
+    }
+    .ai-chat-messages {
+      flex: 1;
+      padding: 0.5rem;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+    .message {
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .message.user {
+      text-align: right;
+      color: #2e3f52;
+      font-weight: bold;
+    }
+    .message.bot {
+      text-align: left;
+      color: #333;
+    }
+    .ai-chat-input {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+    .ai-chat-input input {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border: none;
+      outline: none;
+    }
+    .ai-chat-input button {
+      background-color: #2e3f52;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+    .ai-chat-input button:hover {
+      background-color: #43576b;
+    }
+
+    /* --------------------------
+       MOBILE RESPONSIVENESS
+    --------------------------- */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .sidebar a {
+        margin: 0 0.5rem;
+      }
+      .right-sidebar {
+        display: none;
+      }
+      .ai-chat-container {
+        left: 10px;
+        right: 10px;
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <h2>EDU Horizon</h2>
+      <a href="#">Account</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Courses</a>
+      <a href="#">Calendar</a>
+      <a href="#">Inbox</a>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+      <h1>Dashboard</h1>
+      <div class="card-grid">
+        <div class="course-card" style="background-color: #66cc99;">
+          <a href="cs249.html">
+            <h3>CS 249 P1 02</h3>
+            <p>Programming in C</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+        <div class="course-card" style="background-color: #ffcc66;">
+          <a href="cs4201.html">
+            <h3>CS 4201 P1 02</h3>
+            <p>Intro Tiny Computers</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+        <div class="course-card" style="background-color: #66ccff;">
+          <a href="cs615.html">
+            <h3>CS 615 P1 01</h3>
+            <p>User Interface Dsgn</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+        <div class="course-card" style="background-color: #99cc99;">
+          <a href="envs101.html">
+            <h3>ENVS101 13A 01</h3>
+            <p>Aquaculture Basics</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+        <div class="course-card" style="background-color: #ff9999;">
+          <a href="ita1201.html">
+            <h3>ITA 1201 01</h3>
+            <p>Elem Italian</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+        <div class="course-card" style="background-color: #ff6666;">
+          <a href="amst255.html">
+            <h3>AMST 255 01 01</h3>
+            <p>Soc Hist Podcast</p>
+            <span class="course-term">Spring 2025</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR (TO DO & EXTERNAL TOOLS) -->
+    <div class="right-sidebar">
+      <div class="todo-section">
+        <h2>To Do</h2>
+        <div class="todo-item">
+          <h4>Turn in MTV Podcast Assignment</h4>
+          <span>Due: Thursday, 11:59 PM</span>
+        </div>
+        <div class="todo-item">
+          <h4>Class</h4>
+          <span>Tomorrow at 9:00 AM</span>
+        </div>
+        <div class="todo-item">
+          <h4>Upcoming</h4>
+          <span>Project Milestone 2 - Next Week</span>
+        </div>
+      </div>
+
+      <div class="external-tools-section">
+        <h2>External Tools</h2>
+        <div class="external-tool-item">
+          <h4>
+            <a href="https://www.gradescope.com" target="_blank">
+              Gradescope - Homework 3
+            </a>
+          </h4>
+          <span>Due: Wednesday, 11:59 PM</span>
+        </div>
+        <div class="external-tool-item">
+          <h4>
+            <a href="https://www.mheducation.com" target="_blank">
+              McGraw-Hill Connect - Chapter 5 Quiz
+            </a>
+          </h4>
+          <span>Due: Monday, 12:00 PM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI CHAT BUTTON (BOTTOM LEFT) -->
+  <button class="ai-chat-button" id="aiChatBtn">AI</button>
+
+  <!-- AI CHAT CONTAINER -->
+  <div class="ai-chat-container" id="aiChatContainer">
+    <div class="ai-chat-header">
+      <h4>AI Chat</h4>
+      <button id="closeChatBtn">&times;</button>
+    </div>
+    <div class="ai-chat-messages" id="chatMessages">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="ai-chat-input">
+      <input type="text" id="chatInputField" placeholder="Ask me anything..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // UI ELEMENT REFERENCES
+    const aiChatBtn = document.getElementById("aiChatBtn");
+    const aiChatContainer = document.getElementById("aiChatContainer");
+    const closeChatBtn = document.getElementById("closeChatBtn");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInputField = document.getElementById("chatInputField");
+    const sendBtn = document.getElementById("sendBtn");
+  
+    // Toggle chat window on button click
+    aiChatBtn.addEventListener("click", () => {
+      aiChatContainer.classList.add("open");
+      chatInputField.focus();
+    });
+  
+    closeChatBtn.addEventListener("click", () => {
+      aiChatContainer.classList.remove("open");
+    });
+  
+    sendBtn.addEventListener("click", sendMessage);
+    chatInputField.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  
+    // Send message and fetch AI response
+    function sendMessage() {
+      const userInput = chatInputField.value.trim();
+      if (!userInput) return;
+  
+      // Display user's message
+      const userMessage = document.createElement("div");
+      userMessage.classList.add("message", "user");
+      userMessage.innerText = userInput;
+      chatMessages.appendChild(userMessage);
+      chatInputField.value = "";
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+      // Call Google Generative Language API for a response
+      // WARNING: Exposing API keys client-side is not recommended for production.
+      const apiKey = "AIzaSyCgJUXGvHXlX9F7zlsOcmiq8UJjptCfwm8";
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  
+      const payload = {
+        "contents": [{
+          "parts": [{ "text": userInput }]
+        }]
+      };
+  
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(data => {
+        console.log("API response:", data); // Debug: inspect the full API response
+        const candidate = data.candidates && data.candidates[0];
+        let aiResponse = "I didn't get a response.";
+  
+        if (candidate) {
+          // Try candidate.content.parts[0].text or candidate.output.text first
+          if (candidate.content &&
+              candidate.content.parts &&
+              candidate.content.parts.length > 0 &&
+              candidate.content.parts[0].text) {
+            aiResponse = candidate.content.parts[0].text;
+          } else if (candidate.output && candidate.output.text) {
+            aiResponse = candidate.output.text;
+          } else {
+            // Fallback: JSON stringify the candidate for debugging output
+            aiResponse = JSON.stringify(candidate);
+          }
+        }
+  
+        const botMessage = document.createElement("div");
+        botMessage.classList.add("message", "bot");
+        botMessage.innerText = "AI Bot: " + aiResponse;
+        chatMessages.appendChild(botMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      })
+      .catch(error => {
+        const errMessage = document.createElement("div");
+        errMessage.classList.add("message", "bot");
+        errMessage.innerText = "AI Bot: There was an error retrieving a response.";
+        chatMessages.appendChild(errMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        console.error("Fetch error:", error);
+      });
+    }
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Account - EDU Horizon</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background-color: #2e3f52;
+      color: #fff;
+      padding: 1rem;
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0.5rem 0;
+      display: block;
+      padding: 0.3rem 0.5rem;
+    }
+    .main-content {
+      padding: 2rem;
+    }
+    .profile-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .profile-info {
+      margin-top: 20px;
+    }
+    .info-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>EDU Horizon</h2>
+      <a href="index.html">Dashboard</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="inbox.html">Inbox</a>
+      <a href="account.html">Account</a>
+    </div>
+    <div class="main-content">
+      <h1>Account Settings</h1>
+      <div class="profile-section">
+        <h2>Profile Information</h2>
+        <div class="profile-info">
+          <div class="info-row">
+            <strong>Name:</strong>
+            <span>John Doe</span>
+          </div>
+          <div class="info-row">
+            <strong>Student ID:</strong>
+            <span>12345678</span>
+          </div>
+          <div class="info-row">
+            <strong>Email:</strong>
+            <span>john.doe@university.edu</span>
+          </div>
+          <div class="info-row">
+            <strong>Major:</strong>
+            <span>Computer Science</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

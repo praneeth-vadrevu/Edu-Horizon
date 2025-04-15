@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inbox - EDU Horizon</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background-color: #2e3f52;
+      color: #fff;
+      padding: 1rem;
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0.5rem 0;
+      display: block;
+      padding: 0.3rem 0.5rem;
+    }
+    .main-content {
+      padding: 2rem;
+    }
+    .message {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .message h3 {
+      margin: 0 0 5px 0;
+    }
+    .message-meta {
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>EDU Horizon</h2>
+      <a href="index.html">Dashboard</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="inbox.html">Inbox</a>
+      <a href="account.html">Account</a>
+    </div>
+    <div class="main-content">
+      <h1>Inbox</h1>
+      <div class="message">
+        <h3>Assignment Feedback - CS249</h3>
+        <div class="message-meta">From: Dr. Smith | 2 hours ago</div>
+        <p>Your latest assignment has been graded. Please review the comments.</p>
+      </div>
+      <div class="message">
+        <h3>Class Cancelled - ITA1201</h3>
+        <div class="message-meta">From: Prof. Romano | Yesterday</div>
+        <p>Tomorrow's Italian class will be held online due to maintenance in the building.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
